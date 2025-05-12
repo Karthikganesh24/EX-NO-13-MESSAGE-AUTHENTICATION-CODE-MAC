@@ -25,10 +25,42 @@ To implement MESSAGE AUTHENTICATION CODE(MAC)
 5. Security: The security of the MAC relies on the secret key \( K \) and the strength of the hash function \( H \), ensuring that an attacker cannot forge a valid MAC without knowledge of the key.
 
 ## Program:
+```
+MAC_SIZE = 32
+def compute_mac(key: str, message: str) -> bytes:
+    key_bytes = key.encode()
+    message_bytes = message.encode()
+    mac = bytearray(MAC_SIZE)
+    
+    for i in range(MAC_SIZE):
+        mac[i] = key_bytes[i % len(key_bytes)] ^ message_bytes[i % len(message_bytes)]
+    
+    return bytes(mac)
 
+def main():
+    key = input("Enter the secret key: ")
+    message = input("Enter the message: ")
+    mac = compute_mac(key, message)
+    print("Computed MAC (in hex):", mac.hex())
+    received_mac_hex = input("Enter the received MAC (as hex): ").strip()
+    try:
+        received_mac = bytes.fromhex(received_mac_hex)
+    except ValueError:
+        print("Invalid hexadecimal input.")
+        return
+    if mac == received_mac:
+        print("MAC verification successful. Message is authentic.")
+    else:
+        print("MAC verification failed. Message is not authentic.")
+
+if __name__ == "__main__":
+    main()
+
+```
 
 
 ## Output:
+![image](https://github.com/user-attachments/assets/435dc7c1-8a06-4c26-93a9-61ea7ece5af5)
 
 
 ## Result:
